@@ -1,0 +1,58 @@
+#!/bin/bash
+
+build_dir=$1
+source_dir=$2
+passed_dir=$3
+problem_name=$4
+passed_file=$5
+
+if [[ ! $build_dir ]]; then
+    echo "Build dir not supplied"
+    exit 1
+fi
+if [[ ! $source_dir ]]; then
+    echo "Source dir not supplied"
+    exit 1
+fi
+if [[ ! $passed_dir ]]; then
+    echo "Passed dir not supplied"
+    exit 1
+fi
+if [[ ! $problem_name ]]; then
+    echo "Problem not supplied"
+    exit 1
+fi
+if [[ ! $passed_file ]]; then
+    echo "Passed file not supplied"
+    exit 1
+fi
+if [[ ! -e $build_dir/$problem_name ]]; then
+    echo "Problem does not exist"
+    exit 1
+fi
+
+mkdir -p passed_dir
+
+exit_code=0
+
+if [ ! -f $passed_dir/$passed_file ] || [ $passed_dir/$passed_file -ot $build_dir/$problem_name ]; then
+    delivery_folder=$build_dir/delivery/$problem_name
+    mkdir -p $delivery_folder
+
+    cp $source_dir/src/problems/$problem_name/$problem_name.cpp $delivery_folder/$problem_name.cpp
+    test=`grep "${source_dir}/src/include/.*.hpp" ${build_dir}/CMakeFiles/${problem_name}.dir/depend.make | cut -d " " -f 2`
+    if [[ $test ]]; then
+        cp $test $delivery_folder/
+        ${source_dir}/kattis-cli/kattis -f --no-browser $delivery_folder/$problem_name.cpp $delivery_folder/*.hpp
+        exit_code=$?
+    else
+        ${source_dir}/kattis-cli/kattis -f --no-browser $delivery_folder/$problem_name.cpp
+        exit_code=$?
+    fi
+
+    if [ $exit_code -eq 0 ]; then
+        touch $passed_dir/$passed_file
+    fi
+fi
+
+exit $exit_code

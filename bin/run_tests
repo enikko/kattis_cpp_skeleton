@@ -1,0 +1,34 @@
+#!/usr/bin/bash
+
+program=$1
+passed_folder=$3
+passed_prefix=$4
+
+mkdir -p $passed_folder
+
+exit_code=0
+
+for filename in $2/*.in; do
+    passed_file=${filename##*/}
+    passed_file=$passed_folder/${passed_prefix}_${passed_file%.in}
+    if [ ! -f $passed_file ] || [ $passed_file -ot $program ] || [ $passed_file -ot $filename ] || [ $passed_file -ot ${filename%.in}.ans ]; then
+        res=$($program < $filename)
+        e_file=${filename%.in}.ans
+        expected=$(cat $e_file)
+        if [ "$res" != "$expected" ]; then
+            exit_code=1
+            echo "Worng answer for" $filename
+            echo "Expected"
+            echo "----"
+            echo -e "${expected}"
+            echo "----"
+            echo "Actual"
+            echo -e "${res}"
+            echo "----"
+        else
+            touch $passed_file
+        fi
+    fi
+done
+
+exit $exit_code
