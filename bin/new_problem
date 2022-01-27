@@ -1,0 +1,18 @@
+#!/bin/bash
+
+problem_id=$1
+
+root=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
+problem_folder="${root}/src/problems/${problem_id}"
+test_folder="${problem_folder}/tests"
+
+if [ -d "$problem_folder" ]; then
+    echo "Problem folder already exists"
+    exit 1
+fi
+
+
+mkdir -p "${problem_folder}"
+mkdir -p "${test_folder}"
+${root}/bin/instantiate_skeleton $root $problem_id
+${root}/bin/fetch_tests $test_folder $problem_id

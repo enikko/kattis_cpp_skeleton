@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import configparser
+import sys
+import re
+from functools import partial
+
+def get_entry(config, match):
+    match = match.group()[2:-2]
+    return config.get(*match.split("."), fallback=match)
+
+if __name__ == "__main__":
+    config = configparser.ConfigParser()
+    root = sys.argv[1]
+    problem_id = sys.argv[2]
+    config_file_name = root + "/.skeleton_config"
+    problem_file_name = root + "/src/problems/" + problem_id + "/" + problem_id + ".cpp"
+    skeleton_file_name = root + "/problem_skeleton.cpp"
+    config.read(config_file_name)
+    if "Problem" not in config:
+        config.add_section("Problem")
+    config.set("Problem", "name", problem_id)
+    with open(skeleton_file_name) as skeleton_file:
+        with open(problem_file_name, "w") as problem_file:
+            for in_line in skeleton_file.readlines():
+                print(re.sub(r'{{.*?}}', partial(get_entry, config), in_line), end="", file=problem_file)
