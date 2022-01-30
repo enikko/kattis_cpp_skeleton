@@ -3,10 +3,13 @@ cmake_minimum_required(VERSION 3.10)
 project(TDDD95)
 enable_testing()
 
+# Force to specify standard so that compile commands are correct
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CPP_COMPILER g++)
+set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 17)
-set(KATTIS_CXX_FLAGS "-g -o2 -static")
+
+set(KATTIS_CXX_FLAGS "-g -O2")
 set(CXX_WARNING_FLAGS "-Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wuseless-cast")
 set(CXX_SANITISER_FLAGS "-fno-omit-frame-pointer -fsanitize=signed-integer-overflow -fsanitize=undefined -fsanitize=bounds -fsanitize=float-divide-by-zero -fsanitize=integer-divide-by-zero -fsanitize=pointer-overflow")
 set(CMAKE_CXX_FLAGS_DEBUG "${KATTIS_CXX_FLAGS} ${CXX_WARNING_FLAGS} ${CXX_SANITISER_FLAGS}")
@@ -25,5 +28,8 @@ function(add_lr_test PROBLEM)
   set_tests_properties(${PROBLEM}_remote PROPERTIES FIXTURES_REQUIRED ${PROBLEM}_local_passed)
 endfunction()
 
-add_executable(hello src/problems/hello/hello.cpp)
-add_lr_test(hello)
+function(add_problem PROBLEM)
+  add_executable(${PROBLEM} "src/problems/${PROBLEM}/${PROBLEM}.cpp")
+  add_lr_test(${PROBLEM})
+endfunction()
+
