@@ -1,5 +1,41 @@
 #!/usr/bin/env bash
 
+# This program runs all local tests for a problem.
+# Note that only tests that has not been successfully solved with the current binary
+# will be executed. To re-run a test the binary has to be newer than the last successful run.
+# Usage:
+# run_test EXECUTABLE TEST_FOLDER PASSED_FOLDER PASSED_PREFIX
+# Where:
+#     EXECUTABLE - The executable that is tested.
+#     TEST_FOLDER - The folder that contains the tests (*.in) and expected answers (*.ans)
+#     PASSED_FOLDER - The folder that contains the time stamp files for the passing
+#         of a test.
+#     PASSED_PREFIX - The prefix that all the time stamp files will have.
+#
+# Author: Erik Nikko <65210465+enikko@users.noreply.github.com>
+
+# MIT License
+#
+# Copyright (c) 2022 Erik Nikko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 program=$1
 passed_folder=$3
 passed_prefix=$4

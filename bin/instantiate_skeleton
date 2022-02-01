@@ -1,4 +1,37 @@
 #!/usr/bin/env python3
+"""
+This file is a program to instantiate a skeleton for the kattis framework.
+Usage:
+instantiate_skeleton TYPE ROOT ID_NAME
+where
+    TYPE - The type to create [library, problem] the skeleton for.
+    ROOT - The Root for the kattis library (git root of the fork).
+    ID_NAME - The id of the problem (if type is problem) or name of the library.
+
+:Author: Erik Nikko <65210465+enikko@users.noreply.github.com>
+"""
+
+# MIT License
+#
+# Copyright (c) 2022 Erik Nikko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 import configparser
 import sys
@@ -11,16 +44,24 @@ def get_entry(config, match):
 
 if __name__ == "__main__":
     config = configparser.ConfigParser()
-    root = sys.argv[1]
-    problem_id = sys.argv[2]
+    type_ = sys.argv[1]
+    root = sys.argv[2]
+    name_id = sys.argv[3]
     config_file_name = root + "/.skeleton_config"
-    problem_file_name = root + "/src/problems/" + problem_id + "/" + problem_id + ".cpp"
-    skeleton_file_name = root + "/problem_skeleton.cpp"
+    if type_ == "problem":
+        output_file_name = root + "/src/problems/" + name_id + "/" + name_id + ".cpp"
+        skeleton_file_name = root + "/problem_skeleton.cpp"
+    elif type_ == "library":
+        output_file_name = root + "/src/include/" + name_id + ".hpp"
+        skeleton_file_name = root + "/library_skeleton.hpp"
     config.read(config_file_name)
     if "Problem" not in config:
         config.add_section("Problem")
-    config.set("Problem", "name", problem_id)
+    if "Library" not in config:
+        config.add_section("Library")
+    config.set("Problem", "name", name_id)
+    config.set("Library", "name", name_id)
     with open(skeleton_file_name) as skeleton_file:
-        with open(problem_file_name, "w") as problem_file:
+        with open(output_file_name, "w") as output_file:
             for in_line in skeleton_file.readlines():
-                print(re.sub(r'{{.*?}}', partial(get_entry, config), in_line), end="", file=problem_file)
+                print(re.sub(r'{{.*?}}', partial(get_entry, config), in_line), end="", file=output_file)

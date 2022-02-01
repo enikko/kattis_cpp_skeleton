@@ -1,5 +1,45 @@
 #!/bin/bash
 
+
+# This file is a program to package and send in a solution to an kattis problem where the
+# source is structured according to the documented project structure.
+# Note that a delivery will only be done if the binary file is newer than the last passed
+# handin.
+# The files that was included in the directory are copied to the delivery folder
+# (BUILD_DIR/delivery/PROBLEM_ID)
+#
+# Usage:
+# make_delivery BUILD_DIR SOURCE_DIR PASSED_DIR PROBLEM_ID PASSED_FILE
+#      BUILD_DIR - The directory where the build has been done (CMake build dir).
+#      SOURCE_DIR - The source directory (root folder of the project/git root).
+#      PASSED_DIR - The directory where files storing passing of tests is stored.
+#      PROBLEM_ID - The id of the kattis problem.
+#      PASSED_FILE - The file (timestamp file) that stores the passing of this test is stored.
+#
+# Author: Erik Nikko <65210465+enikko@users.noreply.github.com>
+
+# MIT License
+#
+# Copyright (c) 2022 Erik Nikko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 build_dir=$1
 source_dir=$2
 passed_dir=$3
@@ -37,6 +77,8 @@ exit_code=0
 
 if [ ! -f $passed_dir/$passed_file ] || [ $passed_dir/$passed_file -ot $build_dir/$problem_name ]; then
     delivery_folder=$build_dir/delivery/$problem_name
+    # Remove any old files
+    rm -rf $delivery_folder
     mkdir -p $delivery_folder
 
     cp $source_dir/src/problems/$problem_name/$problem_name.cpp $delivery_folder/$problem_name.cpp
