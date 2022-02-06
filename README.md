@@ -22,14 +22,14 @@ have the following licenses (please check each sub-repository for
 complete license information):
 
 | Software | License |
----------------------
+|----------|---------|
 | kattis-cli | MIT |
 
 ## Dependency
 The software in the repository has the following dependencies:
 
 | Software | Version | Optional |
---------------------------------
+|----------|---------|----------|
 | CMake    | >= 3.10 | Required |
 | g++      | >= 11.2.0_3* | Required |
 | python3  | >= 3.9.10* | Required |
