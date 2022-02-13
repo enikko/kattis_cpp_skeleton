@@ -82,7 +82,12 @@ if [ ! -f $passed_dir/$passed_file ] || [ $passed_dir/$passed_file -ot $build_di
     mkdir -p $delivery_folder
 
     cp $source_dir/src/problems/$problem_name/$problem_name.cpp $delivery_folder/$problem_name.cpp
-    test=`grep "${source_dir}/src/include/.*.hpp" ${build_dir}/CMakeFiles/${problem_name}.dir/src/problems/${problem_name}/${problem_name}.cpp.o.d`
+    dependency_o_file=${build_dir}/CMakeFiles/${problem_name}.dir/src/problems/${problem_name}/${problem_name}.cpp.o.d
+    if [ -f $dependency_o_file ]; then
+        test=`grep "${source_dir}/src/include/.*.hpp" ${dependency_o_file}`
+    else
+        test=`grep "/etl/.*.hpp" ${build_dir}/CMakeFiles/${problem_name}.dir/depend.make | cut -d " " -f 2`
+    fi
     echo $test
     if [[ $test ]]; then
         cp $test $delivery_folder/
