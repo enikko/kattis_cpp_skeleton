@@ -86,7 +86,7 @@ if [ ! -f $passed_dir/$passed_file ] || [ $passed_dir/$passed_file -ot $build_di
     if [ -f $dependency_o_file ]; then
         test=`grep "${source_dir}/src/include/.*.hpp" ${dependency_o_file}`
     else
-        test=`grep "/etl/.*.hpp" ${build_dir}/CMakeFiles/${problem_name}.dir/depend.make | cut -d " " -f 2`
+        test=`grep "src/include/.*.hpp" ${build_dir}/CMakeFiles/${problem_name}.dir/depend.make | cut -d " " -f 2`
     fi
     echo $test
     if [[ $test ]]; then
