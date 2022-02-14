@@ -88,7 +88,6 @@ if [ ! -f $passed_dir/$passed_file ] || [ $passed_dir/$passed_file -ot $build_di
     else
         test=`grep "src/include/.*.hpp" ${build_dir}/CMakeFiles/${problem_name}.dir/depend.make | cut -d " " -f 2`
     fi
-    echo $test
     if [[ $test ]]; then
         cp $test $delivery_folder/
         ${source_dir}/kattis-cli/kattis -f --no-browser $delivery_folder/$problem_name.cpp $delivery_folder/*.hpp
